@@ -70,20 +70,21 @@ matches = re.finditer(aftercolonre, sunset, re.MULTILINE)
 for matchNum, match in enumerate(matches, start=1):
     sunsetminutes = "{match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group())
 
-sunsetminutes = (int(sunsetminutes))
+sunsetminutes = (int(sunsetminutes) + 20 )
 
 
 
-crontabtemplate = (f"#The sunrise today is at {sunrise}am and the sunset is at {sunset}pm\n"
-                   f"# m h  dom mon dow   command\n"
-                   f"# We convert the sunset hour value to 24hour time, and add an hour to close the door 1 hour after official sunset \n"
+crontabtemplate = (f'#The sunrise today is at {sunrise}am and the sunset is at {sunset}pm\n'
+                   f'# m h  dom mon dow   command\n'
+                   f'#We convert the sunset hour value to 24hour time, and add an hour to close the door 1 hour after official sunset \n'
                    f"{sunriseminutes} {sunrisehour} * * * /usr/bin/python /home/pi/open.py\n"
                    f"{sunsetminutes} {sunsethour} * * * /usr/bin/python /home/pi/close.py\n"
-				   f"58 03 * * * echo Bigdaddy | sudo /usr/bin/python3 /home/pi/risenset.py")
+                   f"58 03 * * * echo Bigdaddy | sudo /usr/bin/python3 /home/pi/risenset.py\n")
 
 print(crontabtemplate)
 
 f=open("/var/spool/cron/crontabs/pi","w+")
 f.writelines(crontabtemplate)
 f.close()
+
 
